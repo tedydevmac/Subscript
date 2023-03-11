@@ -29,7 +29,14 @@ final darkFilledButtonStyle = ElevatedButton.styleFrom(
 }));
 
 late final String uid;
-final List<Subscription> Subscripts = [];
+final List<Subscription> Subscripts = [
+  Subscription(
+      title: "Netflix",
+      description: null,
+      dueDate: DateTime(2022, 1, 1),
+      price: 5.12,
+      frequency: "per month")
+];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
