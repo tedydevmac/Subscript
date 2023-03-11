@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:subscript/pages/homepage.dart';
 import 'dart:async';
-import 'package:subscript/Subscription.dart';
+import 'package:subscript/other%20components/Subscription.dart';
 import 'package:subscript/pages/signinpage.dart';
 
 final lightTheme = ThemeData.light(useMaterial3: true);
@@ -35,7 +35,13 @@ final List<Subscription> Subscripts = [
       description: null,
       dueDate: DateTime(2022, 1, 1),
       price: 5.12,
-      frequency: "per month")
+      frequency: "per month"),
+  Subscription(
+      title: "Youtube Premium",
+      description: null,
+      dueDate: DateTime(2023, 3, 11, 23, 19),
+      price: 90,
+      frequency: "per year")
 ];
 
 void main() async {

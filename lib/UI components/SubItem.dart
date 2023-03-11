@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:subscript/Subscription.dart';
+import 'package:subscript/other%20components/Subscription.dart';
 import 'package:subscript/main.dart';
+import 'package:subscript/other components/notificationservice.dart';
 
 /* 
 things to include:
   late String _title;               #
-  late DateTime _dueDate;
+  late DateTime _dueDate;           #
   late double _price;               #
   late final String _freq;          #
 */
@@ -55,7 +56,11 @@ class SubItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          NotificationService().showNotification(
+                              title: "${subscribe.title} payment",
+                              body: subscribe.desc);
+                        },
                         style: filledButtonStyle,
                         child: Text("Add reminder"),
                       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:subscript/Subscription.dart';
-import 'package:subscript/components/SubItem.dart';
-import 'package:subscript/components/add_sub_bottom_sheet.dart';
+import 'package:subscript/other%20components/Subscription.dart';
+import 'package:subscript/UI%20components/SubItem.dart';
+import 'package:subscript/UI%20components/add_sub_bottom_sheet.dart';
 import 'package:subscript/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -69,7 +69,12 @@ class _HomePageState extends State<HomePage> {
           top: false,
           child: ListView(
             children: [
-              ListView.builder(
+              ListView.separated(
+                separatorBuilder: (separatorContext, index) => const Divider(
+                  color: Colors.grey,
+                  thickness: 0.4,
+                  height: 1,
+                ),
                 itemBuilder: (context, index) {
                   final eachSub = Subscripts[index];
                   return SubItem(subscribe: eachSub);

@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^3.11.2
   cloud_firestore: ^3.5.1
   google_sign_in: ^5.4.2
+  flutter_local_notifications: ^13.0.0
 
 dev_dependencies:
   flutter_test:
