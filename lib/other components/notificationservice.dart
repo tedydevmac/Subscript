@@ -1,12 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+/// Feedback:
+/// 1. Create an asynchronous initializer using static functions
+/// 2. Notification details is constant so it should be in the showNotification function
+/// 3. For showNotification, title and body should be required
+/// 4. You need to do platform-specific setup for local notifications and request for permissions
 class NotificationService {
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin notificationsPlugin;
+  NotificationService._({required this.notificationsPlugin});
 
-  Future<void> initNotification() async {
+  static Future<NotificationService> initNotification() async {
+    final notificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // Flutter logo is stored as ic_launcher in android/app/src/main/res
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('logo');
+        const AndroidInitializationSettings('ic_launcher');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -17,21 +27,32 @@ class NotificationService {
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    // Request notification permission
+    if (Platform.isAndroid) {
+      await notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()!
+          .requestPermission();
+    } else if (Platform.isIOS) {
+      await notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()!
+          .requestPermissions(sound: true, alert: true, badge: true);
+    }
+
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {});
-  }
-
-  notificationDetails() {
-    return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
-        iOS: DarwinNotificationDetails());
+    return NotificationService._(notificationsPlugin: notificationsPlugin);
   }
 
   Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad}) async {
-    return notificationsPlugin.show(
-        id, title, body, await notificationDetails());
+      {int id = 0, required String title, required String? body}) async {
+    const notificationDetails = NotificationDetails(
+        android: AndroidNotificationDetails('channelId', 'channelName',
+            importance: Importance.max),
+        iOS: DarwinNotificationDetails());
+    return notificationsPlugin.show(id, title, body, notificationDetails);
   }
 }

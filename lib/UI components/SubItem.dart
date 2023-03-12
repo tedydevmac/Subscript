@@ -57,7 +57,7 @@ class SubItem extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          NotificationService().showNotification(
+                          notificationService.showNotification(
                               title: "${subscribe.title} payment",
                               body: subscribe.desc);
                         },
