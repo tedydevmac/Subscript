@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:subscript/other%20components/Subscription.dart';
-import 'package:subscript/UI%20components/SubItem.dart';
-import 'package:subscript/UI%20components/add_sub_bottom_sheet.dart';
+import 'package:subscript/services/subscription.dart';
+import 'package:subscript/components/subitem.dart';
+import 'package:subscript/components/add_sub_bottom_sheet.dart';
 import 'package:subscript/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
