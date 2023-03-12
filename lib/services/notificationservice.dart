@@ -14,9 +14,9 @@ class NotificationService {
   static Future<NotificationService> initNotification() async {
     final notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    // Flutter logo is stored as ic_launcher in android/app/src/main/res
+    // You need to create the logo using Android Studio, otherwise it will look weird
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('ic_launcher');
+        const AndroidInitializationSettings('logo');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,

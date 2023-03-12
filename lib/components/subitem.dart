@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:subscript/other%20components/Subscription.dart';
+import 'package:subscript/services/subscription.dart';
 import 'package:subscript/main.dart';
-import 'package:subscript/other components/notificationservice.dart';
 
 /* 
 things to include:
