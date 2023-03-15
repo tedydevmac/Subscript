@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:subscript/services/listenerEnums.dart';
 import 'package:subscript/services/notificationservice.dart';
 import 'package:subscript/pages/homepage.dart';
-import 'dart:async';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/pages/signinpage.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'dart:async';
 
 final lightTheme = ThemeData.light(useMaterial3: true);
 final filledButtonStyle = ElevatedButton.styleFrom(
@@ -36,17 +37,26 @@ final List<Subscription> Subscripts = [
   Subscription(
       title: "Netflix",
       description: "Netflix personal plan monthly payment!!!",
-      dueDate: DateTime(2023, 3, 15, 21, 25),
-      price: 5.12,
+      dueDate: DateTime(2023, 3, 15, 00, 06),
+      price: 5.129971234,
+      currency: "SGD",
       frequency: "per month"),
   Subscription(
       title: "Youtube Premium",
       description: "please pay i need ad-free among us vids",
-      dueDate: DateTime(2023, 3, 15, 21, 25),
-      price: 90,
-      frequency: "per year")
+      dueDate: DateTime(2023, 3, 15, 00, 06),
+      price: 90.99123475,
+      currency: "SGD",
+      frequency: "per year"),
+  Subscription(
+      title: "NordVPN Premium",
+      description: "need the hub privately so pls pay",
+      dueDate: DateTime(2023, 3, 15, 00, 06),
+      price: 23.234234,
+      currency: "SGD",
+      frequency: "per week")
 ];
-
+final subStreamController = StreamController<SubscriptStream>.broadcast();
 /// Feedback:
 /// 1. Use notificationService globally and initialize in main function
 

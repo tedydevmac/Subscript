@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:subscript/services/listenerEnums.dart';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/components/subitem.dart';
 import 'package:subscript/components/add_sub_bottom_sheet.dart';
@@ -15,8 +16,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    subStreamController.stream.listen(subStreamControllerListener);
     asyncinit();
     super.initState();
+  }
+
+  void subStreamControllerListener(SubscriptStream value) {
+    switch (value) {
+      case SubscriptStream.refreshSubs:
+        setState(() {});
+        break;
+      default:
+    }
   }
 
   Future<void> asyncinit() async {

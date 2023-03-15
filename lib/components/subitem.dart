@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:subscript/services/listenerEnums.dart';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/main.dart';
-
 import '../services/notificationservice.dart';
 
 /* 
@@ -14,21 +14,28 @@ things to include:
   late final String _freq;          #
 */
 
-class SubItem extends StatelessWidget {
+class SubItem extends StatefulWidget {
   final Subscription subscribe;
   const SubItem({super.key, required this.subscribe});
 
   @override
+  State<SubItem> createState() => _SubItemState();
+}
+
+class _SubItemState extends State<SubItem> {
+  @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
     final theme = Theme.of(context);
-    final formattedDate = DateFormat("dd/MM/yyyy").format(subscribe.dueDate);
+    final formattedDate =
+        DateFormat("dd/MM/yyyy").format(widget.subscribe.dueDate);
     final formattedPrice = NumberFormat.currency(symbol: '\$', decimalDigits: 2)
-        .format(subscribe.price);
+        .format(widget.subscribe.price);
+    final isDark = theme.brightness == Brightness.dark;
     return InkWell(
       onTap: () {/* show editing page */},
       child: ChangeNotifierProvider.value(
-        value: subscribe,
+        value: widget.subscribe,
         child: Consumer<Subscription>(
           builder: (context, value, child) {
             return Padding(
@@ -37,7 +44,7 @@ class SubItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ListTile(
-                      title: Text(subscribe.title),
+                      title: Text(widget.subscribe.title),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -45,10 +52,15 @@ class SubItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text("${formattedPrice} "),
-                              Text(subscribe.freq),
+                              Text(widget.subscribe.freq),
                             ],
                           ),
-                          Chip(label: Text(formattedDate))
+                          Chip(
+                            label: Text(formattedDate),
+                            backgroundColor: isDark
+                                ? Colors.grey[800]
+                                : Color.fromRGBO(254, 251, 254, 1),
+                          )
                         ],
                       ),
                     ),
@@ -56,20 +68,35 @@ class SubItem extends StatelessWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          debugPrint(
-                              "Notification Scheduled for ${subscribe.dueDate}");
-                          NotificationService().scheduleNotification(
-                              title: subscribe.title,
-                              body: subscribe.desc == null
-                                  ? "${subscribe.price}"
-                                  : subscribe.desc,
-                              scheduledNotificationDateTime: subscribe.dueDate);
-                        },
-                        style: filledButtonStyle,
-                        child: Text("Add reminder"),
-                      ),
+                      widget.subscribe.isReminded
+                          ? const Icon(
+                              Icons.done,
+                              color: Colors.green,
+                              size: 30,
+                            )
+                          : ElevatedButton(
+                              onPressed: () {
+                                NotificationService().scheduleNotification(
+                                    title: widget.subscribe.title,
+                                    body: widget.subscribe.desc ??
+                                        "${widget.subscribe.price}",
+                                    scheduledNotificationDateTime:
+                                        widget.subscribe.dueDate);
+                                widget.subscribe.isReminded =
+                                    !widget.subscribe.isReminded;
+                                int index =
+                                    Subscripts.indexOf(widget.subscribe);
+                                if (index != -1) {
+                                  Subscripts.removeAt(index);
+                                  Subscripts.add(widget.subscribe);
+                                }
+                                subStreamController
+                                    .add(SubscriptStream.refreshSubs);
+                                setState(() {});
+                              },
+                              style: filledButtonStyle,
+                              child: Text("Add reminder"),
+                            ),
                     ],
                   )
                 ],

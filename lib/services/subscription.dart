@@ -9,7 +9,9 @@ class Subscription extends ChangeNotifier {
   late String? _desc;
   late DateTime _dueDate;
   late double _price;
-  late final String _freq;
+  late String _currency;
+  late String _freq;
+  bool _isReminded = false;
 
   String get title => _title;
   set title(String title) {
@@ -35,9 +37,21 @@ class Subscription extends ChangeNotifier {
     notifyListeners();
   }
 
+  String get currency => _currency;
+  set currency(String currency) {
+    _currency = currency;
+    notifyListeners();
+  }
+
   String get freq => _freq;
   set freq(String freq) {
     _freq = freq;
+    notifyListeners();
+  }
+
+  bool get isReminded => _isReminded;
+  set isReminded(bool isReminded) {
+    _isReminded = isReminded;
     notifyListeners();
   }
 
@@ -52,7 +66,9 @@ class Subscription extends ChangeNotifier {
         "description": _desc,
         "dueDate": dueDate.millisecondsSinceEpoch,
         "price": _price,
-        "frequency": _freq
+        "currency": _currency,
+        "frequency": _freq,
+        "isReminded": _isReminded
       };
 
   Subscription(
@@ -60,11 +76,13 @@ class Subscription extends ChangeNotifier {
       required String? description,
       required DateTime dueDate,
       required double price,
+      required String currency,
       required String frequency}) {
     _title = title;
     _desc = description;
     _dueDate = dueDate;
     _price = price;
+    _currency = currency;
     _freq = frequency;
   }
   Subscription.initializeFromDocSnapshot(
@@ -74,7 +92,9 @@ class Subscription extends ChangeNotifier {
     _desc = documentSnapshot["description"];
     _dueDate = DateTime.fromMillisecondsSinceEpoch(documentSnapshot["dueDate"]);
     _price = documentSnapshot["price"];
+    _currency = documentSnapshot["currency"];
     _freq = documentSnapshot["frequency"];
+    _isReminded = documentSnapshot["isReminded"];
   }
 
   Future<void> storeSub() async {
