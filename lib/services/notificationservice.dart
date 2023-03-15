@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Feedback:
@@ -8,15 +9,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 /// 3. For showNotification, title and body should be required
 /// 4. You need to do platform-specific setup for local notifications and request for permissions
 class NotificationService {
-  final FlutterLocalNotificationsPlugin notificationsPlugin;
-  NotificationService._({required this.notificationsPlugin});
+  final FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  static Future<NotificationService> initNotification() async {
-    final notificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    // You need to create the logo using Android Studio, otherwise it will look weird
+  Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('logo');
+        const AndroidInitializationSettings('flutter_logo');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -27,32 +25,31 @@ class NotificationService {
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-
-    // Request notification permission
-    if (Platform.isAndroid) {
-      await notificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!
-          .requestPermission();
-    } else if (Platform.isIOS) {
-      await notificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()!
-          .requestPermissions(sound: true, alert: true, badge: true);
-    }
-
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {});
-    return NotificationService._(notificationsPlugin: notificationsPlugin);
   }
 
-  Future showNotification(
-      {int id = 0, required String title, required String? body}) async {
-    const notificationDetails = NotificationDetails(
+  notificationDetails() {
+    return const NotificationDetails(
         android: AndroidNotificationDetails('channelId', 'channelName',
             importance: Importance.max),
         iOS: DarwinNotificationDetails());
-    return notificationsPlugin.show(id, title, body, notificationDetails);
+  }
+
+  Future scheduleNotification(
+      {int id = 0,
+      required String title,
+      required String? body,
+      required DateTime scheduledNotificationDateTime}) async {
+    return notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
+        await NotificationDetails(),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 }

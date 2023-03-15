@@ -6,6 +6,8 @@ import 'package:subscript/pages/homepage.dart';
 import 'dart:async';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/pages/signinpage.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 final lightTheme = ThemeData.light(useMaterial3: true);
 final filledButtonStyle = ElevatedButton.styleFrom(
@@ -33,19 +35,17 @@ late final String uid;
 final List<Subscription> Subscripts = [
   Subscription(
       title: "Netflix",
-      description: null,
-      dueDate: DateTime(2022, 1, 1),
+      description: "Netflix personal plan monthly payment!!!",
+      dueDate: DateTime(2023, 3, 15, 21, 25),
       price: 5.12,
       frequency: "per month"),
   Subscription(
       title: "Youtube Premium",
-      description: null,
-      dueDate: DateTime(2023, 3, 11, 23, 19),
+      description: "please pay i need ad-free among us vids",
+      dueDate: DateTime(2023, 3, 15, 21, 25),
       price: 90,
       frequency: "per year")
 ];
-
-late final NotificationService notificationService;
 
 /// Feedback:
 /// 1. Use notificationService globally and initialize in main function
@@ -54,8 +54,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
-  notificationService = await NotificationService.initNotification();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
 
   final currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser == null) {

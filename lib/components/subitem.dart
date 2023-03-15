@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/main.dart';
 
+import '../services/notificationservice.dart';
+
 /* 
 things to include:
   late String _title;               #
@@ -56,9 +58,14 @@ class SubItem extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          notificationService.showNotification(
-                              title: "${subscribe.title} payment",
-                              body: subscribe.desc);
+                          debugPrint(
+                              "Notification Scheduled for ${subscribe.dueDate}");
+                          NotificationService().scheduleNotification(
+                              title: subscribe.title,
+                              body: subscribe.desc == null
+                                  ? "${subscribe.price}"
+                                  : subscribe.desc,
+                              scheduledNotificationDateTime: subscribe.dueDate);
                         },
                         style: filledButtonStyle,
                         child: Text("Add reminder"),
