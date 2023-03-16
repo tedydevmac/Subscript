@@ -72,7 +72,8 @@ class Subscription extends ChangeNotifier {
       };
 
   Subscription(
-      {required String title,
+      {required this.id,
+      required String title,
       required String? description,
       required DateTime dueDate,
       required double price,

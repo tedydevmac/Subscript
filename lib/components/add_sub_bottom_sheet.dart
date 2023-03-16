@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:subscript/services/subscription.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:subscript/main.dart';
+
+import '../services/listenerEnums.dart';
 
 class AddSubBottomSheet extends StatefulWidget {
   const AddSubBottomSheet({super.key});
@@ -19,6 +22,7 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
   var freqDropdownValue = "None selected";
   late String currency;
   DateTime? dueDate;
+  var isLoading = false;
 
   Future<void> pickDate() async {
     final newDueDate = await DatePicker.showDateTimePicker(
@@ -49,6 +53,114 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
     }
   }
 
+  Future<void> addSub() async {
+    if (isLoading) return;
+    if (titleController.text == "") {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Title is required"),
+            content:
+                const Text("Please fill in a title to add the subscription."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    final String text = moneyController.text;
+    final bool containsMultipleDots =
+        text.split('').where((char) => char == '.').length > 1;
+    if (moneyController.text == "") {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Subscription price is required"),
+            content:
+                const Text("Please fill in a price to add the subscription."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    if (containsMultipleDots) {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Subscription price format invalid"),
+            content: const Text("Price contains more than one decimal point"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    if (dueDate == null) {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("A subscription payment dateline is required"),
+            content: const Text(
+                "Please fill in a dateline to add the subscription."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    final navigator = Navigator.of(context);
+    final newSub = Subscription(
+        id: const Uuid().v4(),
+        title: titleController.text,
+        description: descriptionController.text == ""
+            ? null
+            : descriptionController.text,
+        dueDate: dueDate!,
+        price: double.parse(moneyController.text),
+        currency: currencyDropdownValue,
+        frequency: freqDropdownValue);
+    Subscripts.add(newSub);
+    subStreamController.add(SubscriptStream.refreshSubs);
+    newSub.storeSub();
+    navigator.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -68,15 +180,18 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-            decoration: InputDecoration(hintText: "Enter title"),
+            decoration: const InputDecoration(
+                hintText: "Enter title", icon: Icon(Icons.title)),
             controller: titleController,
           ),
           TextField(
-              decoration:
-                  InputDecoration(hintText: "Enter description (if any)"),
+              decoration: const InputDecoration(
+                  hintText: "Enter description (optional)",
+                  icon: Icon(Icons.feed)),
               controller: descriptionController),
           TextField(
-            decoration: InputDecoration(hintText: "Enter price"),
+            decoration: const InputDecoration(
+                hintText: "Enter price", icon: Icon(Icons.attach_money)),
             controller: moneyController,
           ),
           const SizedBox(
@@ -102,27 +217,27 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
                 width: 10,
               ),
               SizedBox(
-                width: 128.5,
+                width: 127,
                 child: DropdownButton(
                   items: const [
                     DropdownMenuItem(
-                        child: Text("Select currency"), value: "None selected"),
-                    DropdownMenuItem(child: Text("SGD"), value: "SGD"),
-                    DropdownMenuItem(child: Text("USD"), value: "USD"),
-                    DropdownMenuItem(child: Text("EUR"), value: "EUR"),
-                    DropdownMenuItem(child: Text("JPY"), value: "JPY"),
-                    DropdownMenuItem(child: Text("GBP"), value: "GBP"),
-                    DropdownMenuItem(child: Text("CAD"), value: "CAD"),
-                    DropdownMenuItem(child: Text("AUD"), value: "AUD"),
-                    DropdownMenuItem(child: Text("CHF"), value: "CHF"),
-                    DropdownMenuItem(child: Text("CNY"), value: "CNY"),
-                    DropdownMenuItem(child: Text("HKD"), value: "HKD"),
-                    DropdownMenuItem(child: Text("NZD"), value: "NZD"),
+                        value: "None selected", child: Text("Select currency")),
+                    DropdownMenuItem(value: "SGD", child: Text("SGD")),
+                    DropdownMenuItem(value: "USD", child: Text("USD")),
+                    DropdownMenuItem(value: "EUR", child: Text("EUR")),
+                    DropdownMenuItem(value: "JPY", child: Text("JPY")),
+                    DropdownMenuItem(value: "GBP", child: Text("GBP")),
+                    DropdownMenuItem(value: "CAD", child: Text("CAD")),
+                    DropdownMenuItem(value: "AUD", child: Text("AUD")),
+                    DropdownMenuItem(value: "CHF", child: Text("CHF")),
+                    DropdownMenuItem(value: "CNY", child: Text("CNY")),
+                    DropdownMenuItem(value: "HKD", child: Text("HKD")),
+                    DropdownMenuItem(value: "NZD", child: Text("NZD")),
                   ],
                   value: currencyDropdownValue,
                   onChanged: firstDropdownCallback,
                   isExpanded: true,
-                  icon: const Icon(Icons.attach_money),
+                  icon: const Icon(Icons.payments),
                   iconSize: 25,
                 ),
               ),
@@ -130,22 +245,22 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
                 width: 10,
               ),
               SizedBox(
-                width: 128.5,
+                width: 127,
                 child: DropdownButton(
                   items: const [
                     DropdownMenuItem(
-                        child: Text("Select frequency"),
-                        value: "None selected"),
-                    DropdownMenuItem(child: Text("Daily"), value: "per day"),
-                    DropdownMenuItem(child: Text("Weekly"), value: "per week"),
+                        value: "None selected",
+                        child: Text("Select frequency")),
+                    DropdownMenuItem(value: "per day", child: Text("Daily")),
+                    DropdownMenuItem(value: "per week", child: Text("Weekly")),
                     DropdownMenuItem(
-                        child: Text("Monthly"), value: "per month"),
-                    DropdownMenuItem(child: Text("Yearly"), value: "per year"),
+                        value: "per month", child: Text("Monthly")),
+                    DropdownMenuItem(value: "per year", child: Text("Yearly")),
                   ],
                   value: freqDropdownValue,
                   onChanged: secondDropdownCallback,
                   isExpanded: true,
-                  icon: Icon(Icons.schedule),
+                  icon: const Icon(Icons.schedule),
                   iconSize: 25,
                 ),
               )
@@ -158,9 +273,18 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: addSub,
                 style: filledButtonStyle,
-                child: Text("Add subscription"),
+                child: isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text("Add subscription"),
               )
             ],
           )

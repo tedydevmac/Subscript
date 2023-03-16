@@ -10,6 +10,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'dart:async';
 
+import 'package:uuid/uuid.dart';
+
 final lightTheme = ThemeData.light(useMaterial3: true);
 final filledButtonStyle = ElevatedButton.styleFrom(
         backgroundColor: lightTheme.colorScheme.primary,
@@ -35,6 +37,7 @@ final darkFilledButtonStyle = ElevatedButton.styleFrom(
 late final String uid;
 final List<Subscription> Subscripts = [
   Subscription(
+      id: const Uuid().v4(),
       title: "Netflix",
       description: "Netflix personal plan monthly payment!!!",
       dueDate: DateTime(2023, 3, 15, 00, 06),
@@ -42,6 +45,7 @@ final List<Subscription> Subscripts = [
       currency: "SGD",
       frequency: "per month"),
   Subscription(
+      id: const Uuid().v4(),
       title: "Youtube Premium",
       description: "please pay i need ad-free among us vids",
       dueDate: DateTime(2023, 3, 15, 00, 06),
@@ -49,6 +53,7 @@ final List<Subscription> Subscripts = [
       currency: "SGD",
       frequency: "per year"),
   Subscription(
+      id: const Uuid().v4(),
       title: "NordVPN Premium",
       description: "need the hub privately so pls pay",
       dueDate: DateTime(2023, 3, 15, 00, 06),
@@ -57,6 +62,7 @@ final List<Subscription> Subscripts = [
       frequency: "per week")
 ];
 final subStreamController = StreamController<SubscriptStream>.broadcast();
+
 /// Feedback:
 /// 1. Use notificationService globally and initialize in main function
 
