@@ -43,6 +43,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Specific project files
-./firebase_options.dart
-./android/app/google-services.json
+# Privacy stuff
+firebase_options.dart
+google-services.json
