@@ -59,7 +59,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final navigator = Navigator.of(context);
     return MaterialApp(
       theme: lightTheme,
       darkTheme: darkTheme,
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Row(
             mainAxisSize: MainAxisSize.min,
-            children: [const Text("My Subscriptions")],
+            children: const [Text("My Subscriptions")],
           ),
         ),
         body: SafeArea(

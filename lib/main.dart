@@ -6,11 +6,9 @@ import 'package:subscript/services/notificationservice.dart';
 import 'package:subscript/pages/homepage.dart';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/pages/signinpage.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'dart:async';
 
-import 'package:uuid/uuid.dart';
 
 final lightTheme = ThemeData.light(useMaterial3: true);
 final filledButtonStyle = ElevatedButton.styleFrom(

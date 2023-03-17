@@ -39,7 +39,7 @@ class _SubItemState extends State<SubItem> {
         child: Consumer<Subscription>(
           builder: (context, value, child) {
             return Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
                   Expanded(
@@ -51,7 +51,7 @@ class _SubItemState extends State<SubItem> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text("${formattedPrice} "),
+                              Text("$formattedPrice "),
                               Text(widget.subscribe.freq),
                             ],
                           ),
@@ -59,7 +59,7 @@ class _SubItemState extends State<SubItem> {
                             label: Text(formattedDate),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromRGBO(254, 251, 254, 1),
+                                : const Color.fromRGBO(254, 251, 254, 1),
                           )
                         ],
                       ),
@@ -75,7 +75,7 @@ class _SubItemState extends State<SubItem> {
                               size: 30,
                             )
                           : ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 NotificationService().scheduleNotification(
                                     title: widget.subscribe.title,
                                     body: widget.subscribe.desc ??
@@ -93,9 +93,10 @@ class _SubItemState extends State<SubItem> {
                                 subStreamController
                                     .add(SubscriptStream.refreshSubs);
                                 setState(() {});
+                                await widget.subscribe.updateSub();
                               },
                               style: filledButtonStyle,
-                              child: Text("Add reminder"),
+                              child: const Text("Add reminder"),
                             ),
                     ],
                   )

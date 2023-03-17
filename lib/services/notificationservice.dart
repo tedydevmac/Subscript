@@ -47,7 +47,7 @@ class NotificationService {
         title,
         body,
         tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
-        await NotificationDetails(),
+        await const NotificationDetails(),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);

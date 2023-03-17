@@ -210,7 +210,7 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
                       onPressed: pickDate,
                       backgroundColor: isDark
                           ? Colors.grey[800]
-                          : Color.fromRGBO(246, 242, 249, 1),
+                          : const Color.fromRGBO(246, 242, 249, 1),
                       elevation: 0,
                     ),
               const SizedBox(
@@ -284,7 +284,7 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
                           color: Colors.white,
                         ),
                       )
-                    : Text("Add subscription"),
+                    : const Text("Add subscription"),
               )
             ],
           )
