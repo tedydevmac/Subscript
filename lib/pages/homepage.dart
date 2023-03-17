@@ -31,16 +31,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> asyncinit() async {
-    final tasksQuerySnapshot = await FirebaseFirestore.instance
+    final subQuerySnapshot = await FirebaseFirestore.instance
         .collection("accounts")
         .doc(uid)
         .collection("subscriptions")
         .get();
-    for (var i = 0; i < tasksQuerySnapshot.docs.length; i++) {
-      final eachTasksDoc = tasksQuerySnapshot.docs[i];
-      Subscripts.add(Subscription.initializeFromDocSnapshot(
-          documentSnapshot: eachTasksDoc));
+    for (var i = 0; i < subQuerySnapshot.docs.length; i++) {
+      final eachSubDoc = subQuerySnapshot.docs[i];
+      Subscripts.add(
+          Subscription.initializeFromDocSnapshot(documentSnapshot: eachSubDoc));
     }
+    setState(() {});
   }
 
   void showAddSubBottomSheet() {

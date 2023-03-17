@@ -35,32 +35,7 @@ final darkFilledButtonStyle = ElevatedButton.styleFrom(
 }));
 
 late final String uid;
-final List<Subscription> Subscripts = [
-  Subscription(
-      id: const Uuid().v4(),
-      title: "Netflix",
-      description: "Netflix personal plan monthly payment!!!",
-      dueDate: DateTime(2023, 3, 15, 00, 06),
-      price: 5.129971234,
-      currency: "SGD",
-      frequency: "per month"),
-  Subscription(
-      id: const Uuid().v4(),
-      title: "Youtube Premium",
-      description: "please pay i need ad-free among us vids",
-      dueDate: DateTime(2023, 3, 15, 00, 06),
-      price: 90.99123475,
-      currency: "SGD",
-      frequency: "per year"),
-  Subscription(
-      id: const Uuid().v4(),
-      title: "NordVPN Premium",
-      description: "need the hub privately so pls pay",
-      dueDate: DateTime(2023, 3, 15, 00, 06),
-      price: 23.234234,
-      currency: "SGD",
-      frequency: "per week")
-];
+final List<Subscription> Subscripts = [];
 final subStreamController = StreamController<SubscriptStream>.broadcast();
 
 /// Feedback:
