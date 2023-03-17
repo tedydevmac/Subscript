@@ -84,6 +84,25 @@ class _SubItemState extends State<SubItem> {
                                         widget.subscribe.dueDate);
                                 widget.subscribe.isReminded =
                                     !widget.subscribe.isReminded;
+                                showDialog(
+                                  context: context,
+                                  builder: (dialogContext) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                          "Subscription reminder notification set."),
+                                      content: Text(
+                                          "You will be sent a notification about the subscription at ${widget.subscribe.dueDate}"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                                 int index =
                                     Subscripts.indexOf(widget.subscribe);
                                 if (index != -1) {

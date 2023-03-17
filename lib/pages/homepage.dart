@@ -14,6 +14,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var isLoading = true;
+
   @override
   void initState() {
     subStreamController.stream.listen(subStreamControllerListener);
@@ -41,7 +43,9 @@ class _HomePageState extends State<HomePage> {
       Subscripts.add(
           Subscription.initializeFromDocSnapshot(documentSnapshot: eachSubDoc));
     }
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void showAddSubBottomSheet() {
@@ -77,24 +81,35 @@ class _HomePageState extends State<HomePage> {
         ),
         body: SafeArea(
           top: false,
-          child: ListView(
-            children: [
-              ListView.separated(
-                separatorBuilder: (separatorContext, index) => const Divider(
-                  color: Colors.grey,
-                  thickness: 0.4,
-                  height: 1,
+          child: isLoading
+              ? const Center(
+                  child: SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                )
+              : ListView(
+                  children: [
+                    ListView.separated(
+                      separatorBuilder: (separatorContext, index) =>
+                          const Divider(
+                        color: Colors.grey,
+                        thickness: 0.4,
+                        height: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final eachSub = Subscripts[index];
+                        return SubItem(subscribe: eachSub);
+                      },
+                      itemCount: Subscripts.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                    )
+                  ],
                 ),
-                itemBuilder: (context, index) {
-                  final eachSub = Subscripts[index];
-                  return SubItem(subscribe: eachSub);
-                },
-                itemCount: Subscripts.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-              )
-            ],
-          ),
         ),
       ),
     );

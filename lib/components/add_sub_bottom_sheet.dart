@@ -100,6 +100,27 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
       );
       return;
     }
+    bool containsText = RegExp(r'[a-zA-Z]').hasMatch(text);
+    if (containsText) {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Subscription price invalid"),
+            content: const Text("Text is given in price, no integers found."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
     if (containsMultipleDots) {
       showDialog(
         context: context,
@@ -107,6 +128,27 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
           return AlertDialog(
             title: const Text("Subscription price format invalid"),
             content: const Text("Price contains more than one decimal point"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    if (freqDropdownValue == "None selected") {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Subscription payment frequency empty"),
+            content: const Text(
+                "Please provide a payment freqency to add a subscription"),
             actions: [
               TextButton(
                 onPressed: () {
