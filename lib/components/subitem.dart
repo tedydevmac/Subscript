@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:subscript/pages/moreinfopage.dart';
 import 'package:subscript/services/listenerEnums.dart';
 import 'package:subscript/services/subscription.dart';
 import 'package:subscript/main.dart';
@@ -33,7 +34,12 @@ class _SubItemState extends State<SubItem> {
         .format(widget.subscribe.price);
     final isDark = theme.brightness == Brightness.dark;
     return InkWell(
-      onTap: () {/* show editing page */},
+      onTap: () {
+        navigator.push(MaterialPageRoute(
+            builder: (context) => MoreInfo(
+                  subscribe: widget.subscribe,
+                )));
+      },
       child: ChangeNotifierProvider.value(
         value: widget.subscribe,
         child: Consumer<Subscription>(
@@ -111,7 +117,6 @@ class _SubItemState extends State<SubItem> {
                                 }
                                 subStreamController
                                     .add(SubscriptStream.refreshSubs);
-                                setState(() {});
                                 await widget.subscribe.updateSub();
                               },
                               style: filledButtonStyle,
