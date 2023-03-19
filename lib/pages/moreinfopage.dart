@@ -5,32 +5,41 @@ import 'package:subscript/services/subscription.dart';
 
 class MoreInfo extends StatelessWidget {
   final Subscription subscribe;
-  const MoreInfo({super.key, required this.subscribe});
+  final dynamic reminderSetTime;
+  const MoreInfo(
+      {super.key, required this.subscribe, required this.reminderSetTime});
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat("dd/MM/yyyy").format(subscribe.dueDate);
-    final String whyisthetitlelikeThis = subscribe.title;
+    final String whyIsTheTitleLikeThis = subscribe.title;
     final navigator = Navigator.of(context);
     final List<dynamic> infoList = [
       subscribe.title,
       subscribe.desc ?? "no description given",
       subscribe.price,
       subscribe.currency,
-      formattedDate,
-      subscribe.dueDate,
+      subscribe.isReminded,
+      reminderSetTime.runtimeType == String
+          ? reminderSetTime
+          : DateFormat("dd/MM/yyyy").format(reminderSetTime),
+      reminderSetTime.runtimeType == String
+          ? reminderSetTime
+          : DateFormat('yyyy-MM-dd HH:mm:ss').format(reminderSetTime),
+      DateFormat("dd/MM/yyyy").format(subscribe.dueDate),
+      DateFormat('yyyy-MM-dd HH:mm:ss').format(subscribe.dueDate),
       subscribe.freq,
-      subscribe.isReminded
     ];
     final List<String> infoHeader = [
       "Title",
       "Description",
       "Price",
       "Price currency",
+      "Reminder added",
+      "Reminder set date",
+      "Reminder set date & time",
       "Payment date",
-      "Payment date and time",
+      "Payment date & time",
       "Payment frequency",
-      "Reminder added"
     ];
     return MaterialApp(
       theme: lightTheme,
@@ -46,7 +55,7 @@ class MoreInfo extends StatelessWidget {
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(whyisthetitlelikeThis),
+              Text(whyIsTheTitleLikeThis),
             ],
           ),
           actions: [
@@ -67,7 +76,7 @@ class MoreInfo extends StatelessWidget {
                 ListView.separated(
                   separatorBuilder: (separatorContext, index) => const Divider(
                     color: Colors.grey,
-                    thickness: 0.3,
+                    thickness: 0.5,
                     height: 0,
                   ),
                   itemBuilder: (context, index) {
@@ -83,13 +92,13 @@ class MoreInfo extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 17.5,
                                 color: Colors.black,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                               ),
                               children: [
                                 TextSpan(
                                   text: "$eachInfo",
                                   style: const TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     color: Colors.black,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -107,9 +116,6 @@ class MoreInfo extends StatelessWidget {
                   itemCount: infoList.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                ),
-                const SizedBox(
-                  height: 50,
                 ),
               ],
             ),

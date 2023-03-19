@@ -24,6 +24,7 @@ class SubItem extends StatefulWidget {
 }
 
 class _SubItemState extends State<SubItem> {
+  dynamic? currentTime;
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
@@ -35,11 +36,17 @@ class _SubItemState extends State<SubItem> {
     final isDark = theme.brightness == Brightness.dark;
     return InkWell(
       onTap: () {
-        navigator.push(MaterialPageRoute(
+        const String placeholder = "Reminder not set";
+        navigator.push(
+          MaterialPageRoute(
             builder: (context) => MoreInfo(
-                  subscribe: widget.subscribe,
-                )));
+              subscribe: widget.subscribe,
+              reminderSetTime: currentTime ?? placeholder,
+            ),
+          ),
+        );
       },
+      onLongPress: () {},
       child: ChangeNotifierProvider.value(
         value: widget.subscribe,
         child: Consumer<Subscription>(
@@ -88,6 +95,7 @@ class _SubItemState extends State<SubItem> {
                                         "${widget.subscribe.price}",
                                     scheduledNotificationDateTime:
                                         widget.subscribe.dueDate);
+                                currentTime = DateTime.now();
                                 widget.subscribe.isReminded =
                                     !widget.subscribe.isReminded;
                                 showDialog(
@@ -97,7 +105,7 @@ class _SubItemState extends State<SubItem> {
                                       title: const Text(
                                           "Subscription reminder notification set."),
                                       content: Text(
-                                          "You will be sent a notification about the subscription at ${widget.subscribe.dueDate}"),
+                                          "You will be sent a notification about the subscription at ${DateFormat('yyyy-MM-dd HH:mm:ss').format(widget.subscribe.dueDate)}"),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
