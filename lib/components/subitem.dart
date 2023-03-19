@@ -24,7 +24,6 @@ class SubItem extends StatefulWidget {
 }
 
 class _SubItemState extends State<SubItem> {
-  dynamic? currentTime;
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
@@ -41,7 +40,6 @@ class _SubItemState extends State<SubItem> {
           MaterialPageRoute(
             builder: (context) => MoreInfo(
               subscribe: widget.subscribe,
-              reminderSetTime: currentTime ?? placeholder,
             ),
           ),
         );
@@ -95,7 +93,6 @@ class _SubItemState extends State<SubItem> {
                                         "${widget.subscribe.price}",
                                     scheduledNotificationDateTime:
                                         widget.subscribe.dueDate);
-                                currentTime = DateTime.now();
                                 widget.subscribe.isReminded =
                                     !widget.subscribe.isReminded;
                                 showDialog(

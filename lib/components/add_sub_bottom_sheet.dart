@@ -141,14 +141,14 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
       );
       return;
     }
-    if (freqDropdownValue == "None selected") {
+    if (dueDate == null) {
       showDialog(
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            title: const Text("Subscription payment frequency empty"),
+            title: const Text("A subscription payment dateline is required"),
             content: const Text(
-                "Please provide a payment freqency to add a subscription"),
+                "Please fill in a dateline to add the subscription."),
             actions: [
               TextButton(
                 onPressed: () {
@@ -162,14 +162,35 @@ class _AddSubBottomSheetState extends State<AddSubBottomSheet> {
       );
       return;
     }
-    if (dueDate == null) {
+    if (currencyDropdownValue == "None selected") {
       showDialog(
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            title: const Text("A subscription payment dateline is required"),
+            title: const Text("Subscription payment currency empty"),
             content: const Text(
-                "Please fill in a dateline to add the subscription."),
+                "Please provide a payment currency to add a subscription"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    if (freqDropdownValue == "None selected") {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Subscription payment frequency empty"),
+            content: const Text(
+                "Please provide a payment freqency to add a subscription"),
             actions: [
               TextButton(
                 onPressed: () {

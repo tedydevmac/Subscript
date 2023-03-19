@@ -5,9 +5,8 @@ import 'package:subscript/services/subscription.dart';
 
 class MoreInfo extends StatelessWidget {
   final Subscription subscribe;
-  final dynamic reminderSetTime;
   const MoreInfo(
-      {super.key, required this.subscribe, required this.reminderSetTime});
+      {super.key, required this.subscribe});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +18,6 @@ class MoreInfo extends StatelessWidget {
       subscribe.price,
       subscribe.currency,
       subscribe.isReminded,
-      reminderSetTime.runtimeType == String
-          ? reminderSetTime
-          : DateFormat("dd/MM/yyyy").format(reminderSetTime),
-      reminderSetTime.runtimeType == String
-          ? reminderSetTime
-          : DateFormat('yyyy-MM-dd HH:mm:ss').format(reminderSetTime),
       DateFormat("dd/MM/yyyy").format(subscribe.dueDate),
       DateFormat('yyyy-MM-dd HH:mm:ss').format(subscribe.dueDate),
       subscribe.freq,
@@ -35,8 +28,6 @@ class MoreInfo extends StatelessWidget {
       "Price",
       "Price currency",
       "Reminder added",
-      "Reminder set date",
-      "Reminder set date & time",
       "Payment date",
       "Payment date & time",
       "Payment frequency",
@@ -90,7 +81,7 @@ class MoreInfo extends StatelessWidget {
                             text: TextSpan(
                               text: "$eachHeader: ",
                               style: const TextStyle(
-                                fontSize: 17.5,
+                                fontSize: 17,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
